@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAppMVVM.Views.PageEdit"
+              xmlns:cx="clr-namespace:MauiAppMVVM.ViewModels"
+             Title="PageEdit">
+    <ContentPage.BindingContext>
+        <cx:EditarView/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid Margin="20" BackgroundColor="#F0F0F0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="1" Grid.Column="0" Text="Descrip. Articulo" FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"/>
+            <Entry Grid.Row="1" Grid.Column="1" Text="{ Binding Nombre }" FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"/>
+
+            <Label Grid.Row="2" Grid.Column="0" Text="Precio. Articulo" FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand"/>
+            <Entry Grid.Row="2" Grid.Column="1" Text="{ Binding Precio }" FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Margin="0,0,0,10"/>
+
+            <Button Grid.Row="3" Grid.Column="0" 
+                Text="Editar Producto" Command="{Binding CreateCommand}" BackgroundColor="#007BFF" TextColor="White" FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Margin="0,0,0,10"/>
+
+            <Button Grid.Row="3" Grid.Column="1"
+                Text="Tomar foto" Command="{Binding  TomarfotoCommand}" BackgroundColor="Green" TextColor="White" FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Margin="0,0,0,10"/>
+
+            <Button Grid.Row="4" Grid.Column="0"
+                Text="Eliminar" Command="{Binding CleanCommand}" BackgroundColor="#DC3545" TextColor="White" FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" Margin="0,0,0,10"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

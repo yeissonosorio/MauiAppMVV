@@ -1,4 +1,7 @@
 ﻿
+using Firebase.Database;
+using Firebase.Database.Query;
+using MauiAppMVVM.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,19 +67,16 @@ namespace MauiAppMVVM.ViewModels
             bool ver= false;
             if (Nombre != "" && Precio > 0 && _base64 != null)
             {
-                var product = new Models.Productsmodel
+                FirebaseClient firebaseClient = new FirebaseClient("https://tarea2-e4701-default-rtdb.firebaseio.com/");
+                await firebaseClient.Child("Productos").PostAsync(new Models.Productos
                 {
-                    nombre = Nombre,
-                    Precio = Precio,
-                    foto = _base64
-                };
-
-                // Llamar al controlador para almacenar el producto en la base de datos
-                if (await App.pro.StoreSitios(product) > 0)
-                {
-                    Cleaner();
-                    await App.Current.MainPage.Navigation.PushAsync(new Views.PageListProductos());
-                }
+                   Nombre = Nombre,
+                   Precio = Precio,
+                   Foto = _base64
+                }); ;
+                await App.Current.MainPage.DisplayAlert("Aviso", "Producto Guardado", "Ok");
+                var page = (Page)Activator.CreateInstance(typeof(PageListProductos));
+                await App.Current.MainPage.Navigation.PushAsync(page);
             }
             else
             {

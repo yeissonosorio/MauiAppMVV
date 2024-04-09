@@ -16,9 +16,12 @@
 
     <ContentPage.Content>
         <StackLayout Margin="10">
-            <Button Text="Crear o ver"
+            <Button Text="Crear"
                     Command="{Binding GoToDetailsCommand}"
-                    CommandParameter="{x:Type local:PageProductos}"/>
+                    CommandParameter="{x:Type local:PageProductos}" Margin="10"/>
+            <Button Text="Editar o eliminar"
+                    Command="{Binding GoEdit}"
+                    CommandParameter="{x:Type local:PageProductos}" Margin="10"/>
 
             <ListView ItemsSource="{Binding Products}"
                       SelectedItem="{Binding SelectedProduct}">
@@ -26,9 +29,9 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
-                                <Image Source="{Binding foto,Converter={StaticResource BaseArray}}" WidthRequest="50" HeightRequest="50" />
+                                <Image Source="{Binding Foto,Converter={StaticResource BaseArray}}" WidthRequest="50" HeightRequest="50" />
                                 <StackLayout>
-                                    <Label Text="{Binding nombre}" />
+                                    <Label Text="{Binding Nombre}" />
                                     <Label Text="{Binding Precio, StringFormat='Precio: {0:N2}'}" />
                                 </StackLayout>
                             </StackLayout>

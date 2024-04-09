@@ -4,29 +4,32 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using MauiAppMVVM.Models;
 using MauiAppMVVM.controller;
+using MauiAppMVVM.Views; // Asegúrate de importar correctamente el espacio de nombres de tu controlador
 
 namespace MauiAppMVVM.ViewModels
 {
-    public class ListProductsViewModels : BaseViewModel
+    public class ListProductsViewModels     : BaseViewModel
     {
-        private ObservableCollection<Productsmodel> _products;
-        private readonly controladorproducto _productController;
+        private ObservableCollection<Productos> _products;
+        private readonly ControllerFirebase _firebaseController; // Cambia el tipo del campo _productController
 
-        public ObservableCollection<Productsmodel> Products
+        public ObservableCollection<Productos> Products
         {
             get { return _products; }
             set { _products = value; OnPropertyChanged(); }
         }
 
-        private Productsmodel _selectedProduct;
+        private Productos _selectedProduct;
 
-        public Productsmodel SelectedProduct
+        public Productos SelectedProduct
         {
             get { return _selectedProduct; }
             set { _selectedProduct = value; OnPropertyChanged(); }
+
         }
 
         public ICommand GoToDetailsCommand { private set; get; }
+        public ICommand GoEdit { private set; get; }
 
         public INavigation Navigation { get; set; }
 
@@ -34,10 +37,11 @@ namespace MauiAppMVVM.ViewModels
         {
             Navigation = navigation;
             GoToDetailsCommand = new Command<Type>(async (pageType) => await GoToDetails(pageType));
+            GoEdit= new Command<Type>(async (pageType) => await edi(pageType));
 
-            Products = new ObservableCollection<Productsmodel>();
+            Products = new ObservableCollection<Productos>();
 
-            _productController = new controladorproducto();
+            _firebaseController = new ControllerFirebase(); // Inicializa _firebaseController en lugar de _productController
 
             LoadProducts();
         }
@@ -48,7 +52,7 @@ namespace MauiAppMVVM.ViewModels
 
         private async Task LoadProducts()
         {
-            var productList = await _productController.GetListPersons();
+            var productList = await _firebaseController.GetListProductsFromFirebase(); // Llama al método correspondiente de ControllerFirebase
             Products.Clear();
             foreach (var product in productList)
             {
@@ -58,21 +62,6 @@ namespace MauiAppMVVM.ViewModels
 
         async Task GoToDetails(Type pageType)
         {
-            if (SelectedProduct != null)
-            {
-                var page = (Page)Activator.CreateInstance(pageType);
-
-                page.BindingContext = new ProductosViewModels()
-                {
-                    Nombre = SelectedProduct.nombre,
-                    Precio = SelectedProduct.Precio,
-                    Foto = SelectedProduct.foto,
-                };
-
-                await Navigation.PushAsync(page);
-            }
-            else
-            {
                 var page = (Page)Activator.CreateInstance(pageType);
 
                 page.BindingContext = new ProductosViewModels()
@@ -83,8 +72,28 @@ namespace MauiAppMVVM.ViewModels
                 };
 
                 await Navigation.PushAsync(page);
-            }
         }
 
+        async Task edi(Type pageType)
+        {
+            if (SelectedProduct != null)
+            {
+                var page = (Page)Activator.CreateInstance(typeof(PageEdit));
+
+                page.BindingContext = new EditarView()
+                {
+                    ID = SelectedProduct.id,
+                    Nombre = SelectedProduct.Nombre, // Ajusta la propiedad Nombre según el modelo Productos
+                    Precio = SelectedProduct.Precio,
+                    Foto = SelectedProduct.Foto,
+                };
+                await Navigation.PushAsync(page);
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "No ha seleccionado un elemento", "Ok");
+            }
+            
+        }
     }
 }
